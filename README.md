@@ -126,7 +126,7 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Sample Recommendation Output
 
-Terminal output of `python -m src.main`, which runs six profiles (three typical, three adversarial):
+Terminal output of `python -m src.main`, which runs seven profiles (three typical, three adversarial, one using the advanced song features):
 
 ```
 Loaded songs: 18
@@ -266,9 +266,67 @@ prefs: {'favorite_genre': 'pop', 'favorite_mood': 'chill', 'target_energy': 0.5,
      - mood match (+1.0)
      - energy 0.28 vs target 0.50 (+1.17)
      - acousticness fit (+0.04)
+
+=== Nostalgic 2000s Folk (advanced) ===
+prefs: {'favorite_genre': 'folk', 'favorite_mood': 'peaceful', 'target_energy': 0.4, 'likes_acoustic': True, 'preferred_tags': ['nostalgic', 'warm'], 'preferred_decade': 2000, 'target_popularity': 50, 'preferred_language': 'en', 'prefers_instrumental': False}
+
+1. Pine Hollow [folk/peaceful] - Score: 6.38
+     - genre match (+2.0)
+     - mood match (+1.0)
+     - energy 0.30 vs target 0.40 (+1.35)
+     - acousticness fit (+0.46)
+     - mood tags nostalgic (+0.25)
+     - 2010s vs preferred 2000s (+0.33)
+     - popularity 48 vs target 50 (+0.49)
+     - language match (+0.25)
+     - instrumental preference match (+0.25)
+2. Dust Road Home [country/nostalgic] - Score: 3.65
+     - energy 0.48 vs target 0.40 (+1.38)
+     - acousticness fit (+0.34)
+     - mood tags nostalgic+warm (+0.50)
+     - 2000s vs preferred 2000s (+0.50)
+     - popularity 64 vs target 50 (+0.43)
+     - language match (+0.25)
+     - instrumental preference match (+0.25)
+3. Coffee Shop Stories [jazz/relaxed] - Score: 3.14
+     - energy 0.37 vs target 0.40 (+1.46)
+     - acousticness fit (+0.45)
+     - mood tags warm (+0.25)
+     - 2000s vs preferred 2000s (+0.50)
+     - popularity 52 vs target 50 (+0.49)
+4. Velvet Hours [r&b/romantic] - Score: 2.92
+     - energy 0.52 vs target 0.40 (+1.32)
+     - acousticness fit (+0.17)
+     - mood tags warm (+0.25)
+     - 2010s vs preferred 2000s (+0.33)
+     - popularity 80 vs target 50 (+0.35)
+     - language match (+0.25)
+     - instrumental preference match (+0.25)
+5. Island Breeze [reggae/uplifting] - Score: 2.90
+     - energy 0.58 vs target 0.40 (+1.23)
+     - acousticness fit (+0.20)
+     - mood tags warm (+0.25)
+     - 1990s vs preferred 2000s (+0.33)
+     - popularity 72 vs target 50 (+0.39)
+     - language match (+0.25)
+     - instrumental preference match (+0.25)
 ```
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->
+
+### Optional features
+
+Run `python -m src.main --help` for all options.
+
+```bash
+python -m src.main --mode mood-first          # balanced | genre-first | mood-first | energy-focused
+python -m src.main --diversity                # penalize repeated artists (-1.0) and genres (-0.5)
+python -m src.main --table --profile lofi     # ASCII table with reasons, one profile
+```
+
+- **Advanced song features:** `popularity`, `release_decade`, `mood_tags`, `language`, `is_instrumental` are in `data/songs.csv` and used in scoring. They only count when the user profile sets `target_popularity`, `preferred_decade`, `preferred_tags`, `preferred_language`, or `prefers_instrumental`, so the original profiles score exactly as before.
+- **Scoring modes:** each mode is a `Weights` object (Strategy pattern); see `MODES` in `src/recommender.py`.
+- **Diversity penalty:** off by default; with `--diversity`, each pick lowers the score of songs sharing its artist or genre.
 
 ---
 

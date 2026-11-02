@@ -21,16 +21,18 @@ Prompts:
 
 ## 3. How the Model Works  
 
-Explain your scoring approach in simple language.  
+The recommender compares every song in the catalog to a short description of what the listener likes, gives each song points, and shows the highest-scoring songs.
 
-Prompts:  
+A listener's taste is four things: a favorite genre, a favorite mood, how energetic they want the music to be (0 is very calm, 1 is very intense), and whether they like acoustic sounds. For each song, the model awards:
 
-- What features of each song are used (genre, energy, mood, etc.)  
-- What user preferences are considered  
-- How does the model turn those into a score  
-- What changes did you make from the starter logic  
+- **2 points** if the genre matches the favorite genre
+- **1 point** if the mood matches the favorite mood
+- **Up to 1.5 points for energy**, more the closer the song's energy is to what the listener wants. A song that is too calm loses points just like a song that is too intense.
+- **Up to 0.5 points for acoustic feel**, using how acoustic the song sounds if the listener likes that, or how electronic it sounds if they don't
 
-Avoid code here. Pretend you are explaining the idea to a friend who does not program.
+The best possible score is 5. Genre counts most because it is the steadiest sign of taste, and mood counts less because it shifts from day to day. Every score comes with a plain-language list of reasons, so the listener can see why a song was picked. Songs are then sorted from highest to lowest score and the top five are shown.
+
+The model never learns from skips or likes. It only follows the preferences it is given, which is why it is a simple content-based simulation and not a real streaming recommender.
 
 ---
 
